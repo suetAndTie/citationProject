@@ -1,0 +1,115 @@
+
+1. Am J Respir Cell Mol Biol. 2017 Dec 5. doi: 10.1165/rcmb.2017-0373OC. [Epub ahead
+of print]
+
+Systemic Markers of Adaptive and Innate Immunity are Associated with COPD
+Severity and Spirometric Disease Progression.
+
+Halper-Stromberg E(1), Yun JH(2), Parker MM(3), Tal Singer R(4), Gaggar A(5),
+Silverman EK(6)(7), Leach S(8), Bowler RP(9), Castaldi PJ(10).
+
+Author information: 
+(1)National Jewish Health, 2930, Medicine, Denver, Colorado, United States ;
+eitan177@gmail.com.
+(2)Brigham and Women's Hospital Channing Division of Network Medicine, 1869,
+Boston, Massachusetts, United States ; jeong.yun@channing.harvard.edu.
+(3)Brigham and Women\'s Hospital, 1861, Medicine, Boston, Massachusetts, United
+States ; rempa@channing.harvard.edu.
+(4)GSK, King of Prussia, Pennsylvania, United States ; Ruth.M.Tal-Singer@gsk.com.
+(5)University of Alabama at Birmingham, 9968, Birmingham, Alabama, United States 
+; agaggar@uabmc.edu.
+(6)Brigham and Women's Hospital, Channing Division of Network Medicine, Boston,
+Massachusetts, United States.
+(7)Brigham and Women's Hospital, Division of Pulmonary Critical Care Medicine,
+Boston, Massachusetts, United States ; reeks@channing.harvard.edu.
+(8)National Jewish Health, Denver, Colorado, United States ; leachs@njhealth.org.
+(9)National Jewish Medical and Research Center, Department of Medicine, Denver,
+Colorado, United States ; bowlerr@njhealth.org.
+(10)Brigham and Women's Hospital, Channing Division of Network Medicine, Boston, 
+Massachusetts, United States ; peter.castaldi@channing.harvard.edu.
+
+The progression of chronic obstructive pulmonary disease (COPD) is associated
+with marked alterations in circulating immune cell populations, but no studies
+have characterized alterations in these cell types across the full spectrum of
+lung function impairment in current and former smokers. In 6,299 subjects from
+the COPDGene and ECLIPSE studies, we related Coulter blood counts and proportions
+to cross-sectional FEV1 adjusting for current smoking status. We also related
+cell count measures to three-year change in FEV1 in ECLIPSE subjects. In a subset
+of subjects with blood gene expression data, we used cell type deconvolution
+methods to infer the proportions of immune cell subpopulations, and we related
+these to COPD clinical status. We observed that FEV1 levels are positively
+correlated with lymphocytes and negatively correlated with myeloid populations
+such as neutrophils and monocytes. In multivariate models, cell counts and
+proportions were significantly associated with FEV1. We also observed that
+lymphocytes, monocytes, and eosinophil counts were predictive of three year
+change in lung function. Using cell type deconvolution to study immune cell
+subpopulations, we observed that subjects with COPD had a lower proportion of
+CD4+ resting memory cells and naive B cells compared to non-COPD smokers.
+Alterations in circulating immune cells in COPD support a mixed pattern of
+lymphocyte suppression and an enhanced myeloid cell immune response. Cell counts 
+and proportions contribute independent information to models predicting lung
+function suggesting a critical role for immune response in long-term COPD
+outcomes. Cell type deconvolution is a promising method for immunophenotyping in 
+large cohorts.
+
+DOI: 10.1165/rcmb.2017-0373OC 
+PMID: 28528348 
+
+
+2. Am J Respir Crit Care Med. 2017 Dec 5. doi: 10.1164/rccm.201709-1852OC. [Epub
+ahead of print]
+
+Risk Trajectories of Readmission and Death in the First Year Following
+Hospitalization for COPD.
+
+Lindenauer PK(1)(2), Dharmarajan K(3)(4)(5), Qin L(6), Lin Z(7), Gershon AS(8),
+Krumholz HM(4)(9)(10).
+
+Author information: 
+(1)Baystate Medical Center, Institute for Healthcare Delivery and Population
+Science, Springfield, Massachusetts, United States.
+(2)University of Massachusetts Medical School, Quantitative Health Sciences,
+Worcester, Massachusetts, United States ; peter.lindenauer@baystatehealth.org.
+(3)Yale-New haven hospital, Center for Outcomes Research and Evaluation, New
+Haven, Connecticut, United States.
+(4)Yale University School of Medicine, 12228, Internal Medicine, New Haven,
+Connecticut, United States.
+(5)CloverHealth, Jersey City, New Jersey, United States ;
+kumar.dharmarajan@yale.edu.
+(6)Yale University Yale School of Public Health, 50296, New Haven, Connecticut,
+United States ; li.qin@yale.edu.
+(7)Yale-New Haven Hospital, 25047, Center for Outcomes Research and Evaluation,
+New Haven, Connecticut, United States ; zhenqiu.lin@yale.edu.
+(8)Institute for Clinical Evaluative Sciences, Toronto, Ontario, Canada ;
+andrea.gershon@ices.on.ca.
+(9)Yale-New Haven Hospital, 25047, Center for Outcomes Research and Evaluation,
+New Haven, Connecticut, United States.
+(10)Yale University Yale School of Public Health, 50296, Health Policy and
+Management, New Haven, Connecticut, United States ; harlan.krumholz@yale.edu.
+
+Rationale Characterizing the dynamic nature of post-hospital risk in COPD is
+needed to provide counseling and plan clinical services. Objectives To analyze
+risk of readmission and death among Medicare beneficiaries >=65 years following
+discharge for COPD, and to determine the association between ventilator support
+and risk trajectory. Methods We computed daily absolute risks of hospital
+readmission and death for one year after discharge for COPD, stratified by
+ventilator support. We determined the time required for risks to decline 50% from
+maximum daily values after discharge; and for daily risks to plateau. We compared
+risks with those found in the general elderly population. Measurements and Main
+Results Among 2,340,637 hospitalizations, the readmission rate at 1 year was
+64.2%, including 63.5%, 66.0% and 64.1% among those receiving invasive,
+noninvasive and no ventilation. Among 1,283,069 hospitalizations, mortality at 1 
+year was 26.2%, including 45.7%, 41.8% and 24.4% among those same groups. Daily
+risk of readmission declined by 50% within 28, 39 and 43 days, and plateaued in
+46, 54, and 61 days among those receiving invasive, noninvasive and no
+ventilation, respectively. Risk of death declined by 50% by 3, 4 and 17 days, and
+plateaued by 21, 18, and 24 days. Risks of hospitalization and death were
+significantly higher following discharge for COPD compared to the general
+Medicare population. Conclusions Discharge from hospital is associated with
+prolonged risks of readmission and death that vary with need for ventilator
+support. Interventions limited to the first month after discharge may be
+insufficient to improve longitudinal outcomes.
+
+DOI: 10.1164/rccm.201709-1852OC 
+PMID: 29068985 
+

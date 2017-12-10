@@ -36,38 +36,6 @@ MLP_MODEL_FILE = 'mlpModel.npy'
 CONTROL_MLP_MODEL_FILE = 'controlmlpModel.npy'
 
 
-def getRetrospectiveCitations(pmidDict):
-	# Do not implement multithreading! PubMed asks to not do concurrent requests
-	print pmidDict
-	retrospectiveCitations = {}
-	for title, pmid in pmidDict.iteritems():
-		retrospectiveCitations[title] = []
-		try:
-			pmreq = urllib2.urlopen(PM_REQUEST_URL + str(pmid))
-			print PM_REQUEST_URL + str(pmid)
-			pmtree = ET.fromstring(pmreq.read())
-			if 'status' in pmtree[1].attrib and pmtree[1].attrib['status'] == 'error':
-				print 'error returned'
-				pmcid = ''
-			else:
-				pmcid = pmtree[1].attrib['pmcid']
-		except Exception as e:
-			print e
-			pmcid = ''
-		if not pmcid == '':
-			pmcreq = urllib2.urlopen(PMC_REQUEST_URL_PRE + str(pmcid[3:]) + PMC_REQUEST_URL_POST)
-			print PMC_REQUEST_URL_PRE + str(pmcid[3:]) + PMC_REQUEST_URL_POST
-			pmctree = ET.fromstring(pmcreq.read())
-			try:
-				for child in pmctree[0][2]:
-					if child.tag == 'Link':
-						retrospectiveCitations[title].append(child[0].text)
-			except Exception as e:
-				print e
-				a = 0 #do nothing
-		else: print 'hello'
-	return retrospectiveCitations
-
 
 # need to find way to generate training output data
 # need to split data into training and test data

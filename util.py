@@ -3,7 +3,6 @@ import math
 import numpy as np
 import scholarly
 
-
 def l2(x, y):
 	dist = 0
 	for k, v in x.items():
@@ -67,6 +66,16 @@ def dateDifference(x, y):
 	month2 = monthMap[y[5:]]
 	return abs((12 * year1 + month1) - (12 * year2 + month2))
 
+# < 3 months, < 6 months, < 9 months, < 12 months, < 18 months, < 24 months, < 36 months, < 48 months, < 60 months, < 84 months, < 120
+def generateDateVector(dateDiff):
+	lessThanDateVector = [3, 6, 9, 12, 18, 24, 36, 48, 60, 84, 120]
+	returnVector = [0 for i in range(len(lessThanDateVector))]
+	for i in range(len(returnVector)):
+		if dateDiff < lessThanDateVector[i]:
+			returnVector[i] = 1
+	return returnVector
+
+
 
 # Features defined as:
 # [L2 distance, Jaccard Distance, Cosine distance (of abstract vectors),
@@ -78,20 +87,15 @@ def dateDifference(x, y):
 
 # somehow need to figure out how to pass in laplacian matrix
 # each element of feature vector should increase if probability that papers are related increases
-def extractFeatures(
-		abstract1,
-		abstract2,
-		authors1,
-		authors2,
-		retrospectiveCitations1,
-		retrospectiveCitations2,
-		pubDateDiff, #diff in months
-		laplacianMatrix = None):
+def extractFeatures(publication1, publication2):
+	abstract1 = publication1.abstractTfidfVector
+	abstract2 = publication2.abstractTfidfVector
 	l2Dist = l2(abstract1, abstract2)
 	jDist = jaccard(abstract1, abstract2)
 	cDist = cosineSimilarity(abstract1, abstract2)
-	numSharedAuthors = jaccard(authors1, authors2)
-	numSharedCitations = jaccard(retrospectiveCitations1, retrospectiveCitations2)
+	numSharedAuthors = jaccard(publication1.authors, publication2.authors)
+	numSharedCitations = jaccard(publication1.retrospectiveCitations, publication2.retrospectiveCitations)
+	pubDateDiffVector = generateDateVector(dateDifference(publication1.date, publication2.date))
 	features = [
 		1. / l2Dist if l2Dist != 0 else 0,
 		jDist,
@@ -101,14 +105,8 @@ def extractFeatures(
 		1. * jDist * cDist,
 		1. / l2Dist * jDist * cDist if l2Dist != 0 else 0,
 		numSharedAuthors,
-		numSharedCitations,
-		1. / pubDateDiff if pubDateDiff != 0 else 0
-	]
-	if laplacianMatrix is not None:
-		# w, v = np.linalg.eig(laplacianMatrix)
-		# indices = np.argsort(w)
-		# values = []
-		a = 0 # dummy varaiable until i figure out what to put here
+		numSharedCitations]
+	features += pubDateDiffVector
 	return features
 
 def getCitations(x):
