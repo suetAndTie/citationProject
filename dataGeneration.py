@@ -24,10 +24,10 @@ def generateDataAndLabels(inputFiles, matrixOutputFile, controlMatrixOutputFile,
 		with open('temp' + labelOutputFile, 'rb') as f:
 			publicationList = pickle.load(f)
 	else:
-		for i in range(len(publicationList)):
+		for i in xrange(len(publicationList)):
 			publicationList[i].genRetrospectiveCitations()
 		with concurrent.futures.ThreadPoolExecutor(max_workers = constants.MAX_WORKERS) as executor:
-			future_to_article = {executor.submit(publicationList[i].genCitedBy): publicationList[i].title for i in range(len(publicationList))}
+			future_to_article = {executor.submit(publicationList[i].genCitedBy): publicationList[i].title for i in xrange(len(publicationList))}
 			for future in concurrent.futures.as_completed(future_to_article):
 				articleTitle = future_to_article[future]
 				try:
@@ -42,14 +42,14 @@ def generateDataAndLabels(inputFiles, matrixOutputFile, controlMatrixOutputFile,
 						print(data)
 		with open('temp' + labelOutputFile, 'wb') as f:
 			pickle.dump(publicationList, f)
-	for publication in publicationList:
-		publication.pubPrint()
+	# for publication in publicationList:
+	# 	publication.pubPrint()
 	# Experimental vs control publication relations (eg TF-IDF vs count)
 	publicationRelationships = []
 	controlPubRelations = []
 	labels = []
-	for i in range(len(publicationList)):
-		for j in range(i + 1, len(publicationList)):
+	for i in xrange(len(publicationList)):
+		for j in xrange(i + 1, len(publicationList)):
 			if dateRange == None or util.dateDifference(publicationList[i].date, publicationList[j].date) <= dateRange:
 				publicationRelationships.append(util.extractFeatures(publicationList[i], publicationList[j], 'tfidf'))
 				controlPubRelations.append(util.extractFeatures(publicationList[i], publicationList[j], 'count'))

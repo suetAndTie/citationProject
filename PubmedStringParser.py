@@ -6,7 +6,7 @@
             fileNameList            List of the file names/path to files containing
                                     the title and abstract
     Output
-            publications            List of publications objects contained in 
+            publications            List of publications objects contained in
                                     fileNameList
                                     For more information on the Publication object,
                                     see Publication.py
@@ -115,7 +115,6 @@ def getDataFromEntry(f, line):
 
 # Function to read in the data from the file
 def getFileData(fileName):
-    exitBool = False
     publications = []
     with codecs.open(fileName, encoding='utf8') as f:
         line = f.readline()
@@ -125,13 +124,13 @@ def getFileData(fileName):
             # Go to next entry
             while True:
                 if len(line) == 0:
-                    exitBool = True
                     break
                 if len(re.findall('^' + str(lastEntry + 1) + '\.\s', line)) > 0: break
                 line = f.readline()
 
             if len(line) == 0: break
-            publications.append(getDataFromEntry(f, line))
+            result = getDataFromEntry(f, line)
+            if result != '': publications.append(result) #Removes the retracted articles
             lastEntry += 1
 
         f.close()
@@ -140,7 +139,7 @@ def getFileData(fileName):
 def stemAbstract(abstract):
     vectorAbstract = abstract.split()
     returnString = ''
-    for i in range(len(vectorAbstract)):
+    for i in xrange(len(vectorAbstract)):
         returnString += stem(vectorAbstract[i]) + ' '
     return returnString
 
@@ -156,8 +155,9 @@ def getAllData(fileNameList):
     for fileName in fileNameList:
         publications += getFileData(fileName)
 
+    print 'Total Number Papers: ', len(publications)
     abstracts = []
-    for i in range(len(publications)):
+    for i in xrange(len(publications)):
         stemmedAbstract = stemAbstract(publications[i].abstract)
         publications[i].stemmedAbstract = stemmedAbstract
         # Test for performance of stemming
@@ -167,7 +167,7 @@ def getAllData(fileNameList):
     tfIdfMatrix = tfIdfVectorizer.fit_transform(abstracts)
     countVectorizer = CountVectorizer()
     countMatrix = countVectorizer.fit_transform(abstracts)
-    for i in range(len(publications)):
+    for i in xrange(len(publications)):
         tfRow, tfCol, tfValue = find(tfIdfMatrix[i])
         publications[i].abstractTfidfVector = {col: value for col, value in zip(tfCol, tfValue)}
         ctRow, ctCol, ctValue = find(countMatrix[i])
@@ -175,12 +175,3 @@ def getAllData(fileNameList):
 
 
     return publications
-
-
-
-
-
-
-
-
-

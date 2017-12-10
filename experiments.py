@@ -78,6 +78,8 @@ def runModel(modelName, trainData, devData, testData):
 
 # Computes classification metrics of the output based on labels
 def getMetrics(output, labels):
+	print 'Num Output Co-Citations: ', np.count_nonzero(output)
+	print 'Num Co-citations: ', np.count_nonzero(labels)
 	print 'Accuracy Score: %f' %metrics.accuracy_score(labels, output)
 	print 'Precision: %f' %metrics.precision_score(labels, output)
 	print 'Recall: %f' %metrics.recall_score(labels, output)
@@ -92,8 +94,11 @@ def main():
 	trainData, devData, testData = getDataSets(matrix, controlMatrix, labels)
 	print '-----Data Info-----'
 	print 'Train Matrix: ', trainData[0].shape
+	print 'Train Num Co-Citations: ', np.count_nonzero(trainData[2])
 	print 'Dev Matrix: ', devData[0].shape
+	print 'Dev Num Co-Citations: ', np.count_nonzero(devData[2])
 	print 'Test Data Matrix: ', testData[0].shape
+	print 'Test Num Co-Citations: ', np.count_nonzero(testData[2])
 	print '\n\n'
 	for modelName in MODELS:
 		print '----------' + modelName + '----------'
