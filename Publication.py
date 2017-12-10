@@ -21,7 +21,7 @@ class Publication:
 		print('hey hi hello')
 
 	def genCitedBy(self):
-		if self.attemptedRetrieveCitedBy: 
+		if self.attemptedRetrieveCitedBy:
 			print('Citations for Title: %s already retrieved' % self.title)
 			return
 		print('Attempting to retrieve citations for Title: %s' % self.title)
@@ -39,7 +39,7 @@ class Publication:
 		if self.attemptedRetrieveRetrospectiveCitations: return
 		self.attemptedRetrieveRetrospectiveCitations = True
 		if self.pmid == None:
-			return 
+			return
 		try:
 			pmreq = requests.get(constants.PM_REQUEST_URL + str(self.pmid))
 			if pmreq.status_code != 200:
@@ -63,7 +63,7 @@ class Publication:
 		except Exception as e:
 			print(e)
 
-	def print(self):
+	def pubPrint(self):
 		print('Title: %s' % self.title)
 		print('Date: %s' % self.date)
 		print('Authors: %s' % str(self.authors))
@@ -74,10 +74,3 @@ class Publication:
 		print('Stemmed Abstract: %s' % self.stemmedAbstract)
 		print('TfIdf Abstract: %s' % self.abstractTfidfVector)
 		print('Count Abstract: %s' % self.abstractCountVector)
-
-
-
-
-
-
-

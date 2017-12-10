@@ -2,6 +2,7 @@
 
 import util
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 import sklearn.metrics as metrics
 import dataRetrieval
@@ -32,9 +33,43 @@ PMC_REQUEST_URL_POST = '&tool=Co-CitationProject&email=guana@stanford.edu'
 
 LOG_REG_MODEL_FILE = 'logRegModel.npy'
 CONTROL_LOG_REG_MODEL_FILE = 'controlLogRegModel.npy'
+SVM_MODEL_FILE = 'svmModel.npy'
+CONTROL_SVM_MODEL_FILE = 'controlsvmModel.npy'
 MLP_MODEL_FILE = 'mlpModel.npy'
 CONTROL_MLP_MODEL_FILE = 'controlmlpModel.npy'
 
+
+def getRetrospectiveCitations(pmidDict):
+	# Do not implement multithreading! PubMed asks to not do concurrent requests
+	print pmidDict
+	retrospectiveCitations = {}
+	for title, pmid in pmidDict.iteritems():
+		retrospectiveCitations[title] = []
+		try:
+			pmreq = urllib2.urlopen(PM_REQUEST_URL + str(pmid))
+			print PM_REQUEST_URL + str(pmid)
+			pmtree = ET.fromstring(pmreq.read())
+			if 'status' in pmtree[1].attrib and pmtree[1].attrib['status'] == 'error':
+				print 'error returned'
+				pmcid = ''
+			else:
+				pmcid = pmtree[1].attrib['pmcid']
+		except Exception as e:
+			print e
+			pmcid = ''
+		if not pmcid == '':
+			pmcreq = urllib2.urlopen(PMC_REQUEST_URL_PRE + str(pmcid[3:]) + PMC_REQUEST_URL_POST)
+			print PMC_REQUEST_URL_PRE + str(pmcid[3:]) + PMC_REQUEST_URL_POST
+			pmctree = ET.fromstring(pmcreq.read())
+			try:
+				for child in pmctree[0][2]:
+					if child.tag == 'Link':
+						retrospectiveCitations[title].append(child[0].text)
+			except Exception as e:
+				print e
+				a = 0 #do nothing
+		else: print 'hello'
+	return retrospectiveCitations
 
 
 # need to find way to generate training output data
@@ -204,22 +239,40 @@ def main():
 	# output = logreg.predict(testData)
 	# controlOuput = controlLogreg.predict(countTestData)
 
-	# Run MLP Classification
-	print 'MLP Classification'
+	# Run SVM
+	print 'SVM Classification'
 	try:
-		with open(MLP_MODEL_FILE, 'rb') as f:
-			mlp = pickle.load(f)
-		with open(CONTROL_MLP_MODEL_FILE, 'rb') as f:
-			controlmlp = pickle.load(f)
+		with open(SVM_MODEL_FILE, 'rb') as f:
+			svm = pickle.load(f)
+		with open(CONTROL_SVM_MODEL_FILE, 'rb') as f:
+			controlsvm = pickle.load(f)
 	except:
-		mlp = MLPClassifier().fit(trainData, trainLabels)
-		controlmlp = MLPClassifier().fit(countTrainData, trainLabels)
-		with open(MLP_MODEL_FILE, 'wb') as f:
-			pickle.dump(mlp, f)
-		with open(CONTROL_MLP_MODEL_FILE, 'wb') as f:
-			pickle.dump(controlmlp, f)
-	output = mlp.predict(testData)
-	controlOuput = controlmlp.predict(countTestData)
+		svm = SVC().fit(trainData, trainLabels)
+		# run logistic regression on control
+		controlsvm = SVC().fit(countTrainData, trainLabels)
+		with open(SVM_MODEL_FILE, 'wb') as f:
+			pickle.dump(svm, f)
+		with open(CONTROL_SVM_MODEL_FILE, 'wb') as f:
+			pickle.dump(controlsvm, f)
+	output = svm.predict(testData)
+	controlOuput = controlsvm.predict(countTestData)
+
+	# Run MLP Classification
+	# print 'MLP Classification'
+	# try:
+	# 	with open(MLP_MODEL_FILE, 'rb') as f:
+	# 		mlp = pickle.load(f)
+	# 	with open(CONTROL_MLP_MODEL_FILE, 'rb') as f:
+	# 		controlmlp = pickle.load(f)
+	# except:
+	# 	mlp = MLPClassifier().fit(trainData, trainLabels)
+	# 	controlmlp = MLPClassifier().fit(countTrainData, trainLabels)
+	# 	with open(MLP_MODEL_FILE, 'wb') as f:
+	# 		pickle.dump(mlp, f)
+	# 	with open(CONTROL_MLP_MODEL_FILE, 'wb') as f:
+	# 		pickle.dump(controlmlp, f)
+	# output = mlp.predict(testData)
+	# controlOuput = controlmlp.predict(countTestData)
 
 	print 'train labels ', trainLabels
 	print 'output ', output

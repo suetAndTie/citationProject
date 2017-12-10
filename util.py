@@ -87,9 +87,15 @@ def generateDateVector(dateDiff):
 
 # somehow need to figure out how to pass in laplacian matrix
 # each element of feature vector should increase if probability that papers are related increases
-def extractFeatures(publication1, publication2):
-	abstract1 = publication1.abstractTfidfVector
-	abstract2 = publication2.abstractTfidfVector
+def extractFeatures(publication1, publication2, vectorType):
+	if vectorType == 'tfidf':
+		abstract1 = publication1.abstractTfidfVector
+		abstract2 = publication2.abstractTfidfVector
+	elif vectorType == 'count':
+		abstract1 = publication1.abstractCountVector
+		abstract2 = publication2.abstractCountVector
+	else:
+		raise Exception('Vector type chosen for the feature extraction is not \'tfidf\' or \'count\': %s')
 	l2Dist = l2(abstract1, abstract2)
 	jDist = jaccard(abstract1, abstract2)
 	cDist = cosineSimilarity(abstract1, abstract2)
