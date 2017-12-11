@@ -8,9 +8,6 @@ from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 import sklearn.metrics as metrics
 
-# remove after debugging string parsing
-import PubmedStringParser
-
 
 # Types of machine learning models to use
 MODELS = {
@@ -106,13 +103,6 @@ def main():
 	for modelName in MODELS:
 		print '----------' + modelName + '----------'
 		runModel(modelName, trainData, devData, testData)
-
-
-def testStringParsing(fileName):
-	publications = PubmedStringParser.getAllData([fileName])
-	print(len(publications))
-	for publication in publications:
-		publication.pubPrint()
 
 if __name__ == "__main__":
 	main()
