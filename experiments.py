@@ -104,7 +104,5 @@ def main():
 		print '----------' + modelName + '----------'
 		runModel(modelName, trainData, devData, testData)
 
-
-
 if __name__ == "__main__":
 	main()

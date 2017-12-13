@@ -19,89 +19,106 @@ from sklearn.feature_extraction.text import CountVectorizer
 from scipy.sparse import find
 from stemming.porter2 import stem
 
-# Get data from individual entry
-def getDataFromEntry(f, line):
+skipTerms = {
+    'Collaborators',
+    'Author information',
+    'Erratum in',
+    'Comment in',
+    'Update in',
+    'Comment on',
+    'Comment in',
+    'Update of',
+    'Summary for patients in',
+    'Retraction in',
+    'Expression of concern in'}
+idTerms = {'DOI', 'PMCID', 'PMID'}
 
-    # Step over part of entry
-    def stepOver(f, line):
-        while line != '\n':
-            line = f.readline()
-        line = f.readline()
-        return line
-
-    title = ''
-    oldTitle = ''
-    abstract = u''
-    date = ''
-    authors = u''
-    pmid = ''
-    # Get date line - uncleaned
+def getNextEntry(f, line, skipTerms = set(), startTerms = idTerms):
     while line != '\n':
-        date = date + line[:-1] + ' '
+        for term in startTerms:
+            if line.startswith(term):
+                return line
         line = f.readline()
-    if 'RETRACTED ARTICLE' in date:
-        return ''
-    line = f.readline()
-
-    # Get title
-    while line != '\n':
-        oldTitle = oldTitle + line[:-1]
-        title = title + line[:-1] + ' '
+    while line == '\n':
         line = f.readline()
-    line = f.readline()
-
-    if line[0] == '[':
-        line = stepOver(f, line)
-
-    # Get authors - uncleaned
-    while line != '\n':
-        authors = authors + line[:-1] + ' '
-        line = f.readline()
-    line = f.readline()
-
-    skipTerms = {
-        'Collaborators',
-        'Author information',
-        'Erratum in',
-        'Comment in',
-        'Update in',
-        'Comment on',
-        'Comment in',
-        'Update of',
-        'Summary for patients in',
-        'Retraction in',
-        'Expression of concern in'}
     while True:
         hasSkipped = False
         for term in skipTerms:
             if line.startswith(term):
-                line = stepOver(f, line)
+                line = getNextEntry(f, line)
                 hasSkipped = True
                 break
         if not hasSkipped:
             break
+    return line
 
-    # Get abstact
+def getBlock(f, line, stopAtPeriod = False, stopAtStartTerms = set()):
+    block = u''
     while line != '\n':
-        abstract = abstract + line[:-1] + ' '
+        for term in stopAtStartTerms:
+            if line.startswith(term):
+                return block, line
+        if stopAtPeriod and line[-2] == '.':
+            return block + line[:-2], f.readline()
+        block = block + line.replace('\n', '') + ' '
+        line = f.readline()
+    if block != '':
+        return block[:-1], line
+    return block, line
+
+def getDataFromNonJournalEntry(f, line, titleBlock):
+    title = re.sub('(^\d*\.\s)', '', titleBlock)
+    line = getNextEntry(f, line)
+    authors, line = getBlock(f, line, stopAtPeriod = True)
+    date, line = getBlock(f, line)
+    line = getNextEntry(f, line, skipTerms)
+    abstract, line = getBlock(f, line, stopAtStartTerms = idTerms)
+    line = getNextEntry(f, line, skipTerms = set(['Publisher']), startTerms = idTerms)
+    pmid = None
+    while line != '\n':
+        splitLine = line.split()
+        if splitLine[0] == 'PMID:':
+            pmid = splitLine[1]
         line = f.readline()
 
-    while line == '\n':
-        line = f.readline()
+    return title, abstract, date, authors, pmid
 
+def getDataFromJournalEntry(f, line, dateBlock):
+    date = dateBlock
+    line = getNextEntry(f, line)
+    title, line = getBlock(f, line)
+    line = getNextEntry(f, line)
+    if line[0] == '[' and 'No authors listed' not in line:
+        line = getNextEntry(f, line)
+    authors, line = getBlock(f, line)
+    line = getNextEntry(f, line, skipTerms)
+    abstract, line = getBlock(f, line)
+    line = getNextEntry(f, line)
     if not (line.startswith('DOI') or line.startswith('PMID') or line.startswith('PMCID')):
-        line = stepOver(f, line)
-
+        line = getNextEntry(f, line)
+    pmid = None
     # Get PMID
     while line != '\n':
         splitLine = line.split()
         if splitLine[0] == 'PMID:':
             pmid = splitLine[1]
-        else:
-            pmid = None
         line = f.readline()
+    return title, abstract, date, authors, pmid
 
-    # Add to papers with title=key and abstract=value
+
+# Get data from individual entry
+def getDataFromEntry(f, line):
+    firstBlock, line = getBlock(f, line)
+    if 'RETRACTED ARTICLE' in firstBlock:
+        return None
+    parsedDateVector = re.findall('((19|20)[0-9]{2}\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))', firstBlock)
+    if len(parsedDateVector) is 0:
+        parsedDateVector = re.findall('((19|20)[0-9]{2})', firstBlock)
+    if len(parsedDateVector) is 0:
+        title, abstract, date, authors, pmid = getDataFromNonJournalEntry(f, line, firstBlock)
+    else:
+        title, abstract, date, authors, pmid = getDataFromJournalEntry(f, line, firstBlock)
+
     cleanedAuthors = re.sub('[0-9()]', '', authors).split(', ')
     parsedDateVector = re.findall('((19|20)[0-9]{2}\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))', date)
     if len(parsedDateVector) is 0:
@@ -111,18 +128,21 @@ def getDataFromEntry(f, line):
         parsedDate = None
     else:
         parsedDate = parsedDateVector[0][0]
-
-    return Publication(title, oldTitle, abstract, parsedDate, cleanedAuthors, pmid)
+    return Publication(title, abstract, parsedDate, cleanedAuthors, pmid)
 
 
 # Function to read in the data from the file
 def getFileData(fileName):
     publications = []
+    line = '\n'
     with codecs.open(fileName, encoding='utf8') as f:
-        line = f.readline()
-        line = f.readline()
+        while line == '\n':
+            line = f.readline()
         lastEntry = 0
+        numLoops = 0
+        numSkipped = 0
         while True:
+            numLoops += 1
             # Go to next entry
             while True:
                 if len(line) == 0:
@@ -132,9 +152,13 @@ def getFileData(fileName):
 
             if len(line) == 0: break
             result = getDataFromEntry(f, line)
-            if result != '': publications.append(result) #Removes the retracted articles
+            if result != None:
+                publications.append(result) #Removes the retracted articles
+            else:
+                numSkipped += 1
             lastEntry += 1
-
+        print('Number of loops: %d' % numLoops)
+        print('Number skipped: %d' % numSkipped)
         f.close()
     return publications
 
@@ -165,6 +189,7 @@ def getAllData(fileNameList):
         # Test for performance of stemming
         abstracts.append(stemmedAbstract)
         # abstracts.append(publications[i].abstract)
+    print 'Vectorizing Papers'
     tfIdfVectorizer = TfidfVectorizer()
     tfIdfMatrix = tfIdfVectorizer.fit_transform(abstracts)
     countVectorizer = CountVectorizer()
@@ -174,6 +199,7 @@ def getAllData(fileNameList):
         publications[i].abstractTfidfVector = {col: value for col, value in zip(tfCol, tfValue)}
         ctRow, ctCol, ctValue = find(countMatrix[i])
         publications[i].abstractCountVector = {col: value for col, value in zip(ctCol, ctValue)}
+    print 'Vectorized Papers'
 
 
     return publications
