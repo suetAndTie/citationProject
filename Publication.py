@@ -4,9 +4,8 @@ import scholarly
 import constants
 
 class Publication:
-	def __init__(self, title, oldTitle, abstract, date, authors, pmid):
+	def __init__(self, title, abstract, date, authors, pmid):
 		self.title = title
-		self.oldTitle = title	#title without spaces in it after \n
 		self.abstract = abstract
 		self.date = date
 		self.authors = authors
