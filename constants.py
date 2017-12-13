@@ -50,6 +50,3 @@ START_INDEX = 0
 
 # number of papers we are trying to get citations for for each run
 NUM_PAPERS_CITATION = 100
-
-# 3588 papers, so need start index from 0 to 3500
-START_INDEX_LIST = range(0,3600,NUM_PAPERS_CITATION)

@@ -68,8 +68,8 @@ class Publication:
 
 	def getCitedByPMCitations(self):
 		# Put in PMID and get back PMID of artciles that cite the given article
-		if self.attemptedRetrieveRetrospectiveCitations: return
-		self.attemptedRetrieveRetrospectiveCitations = True
+		if self.attemptedPMCitedBy: return
+		self.attemptedPMCitedBy = True
 		try:
 		    pmreq = requests.get(constants.PM_CITEDBY_URL_PRE + str(self.pmid) + constants.PM_CITEDBY_URL_POST)
 		    if pmreq.status_code != 200:
