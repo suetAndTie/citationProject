@@ -24,16 +24,17 @@ class Publication:
 
 	def genCitedBy(self):
 		if self.attemptedRetrieveCitedBy:
-			print('Citations for Title: %s already retrieved' % self.title)
+			print('Citations for Title already received:', self.title.encode('utf-8'))
 			return
-		print('Attempting to retrieve citations for Title: %s' % self.title)
+		print('Attempting to retrieve citations for Title:', self.title.encode('utf-8'))
 		self.attemptedRetrieveCitedBy = True
-		query = scholarly.search_pubs_query(self.title.encode('utf-8'))
+		query = scholarly.search_pubs_query(self.title)
 		paper = next(query, None)
 		if paper is None:
 			return
 		self.citedBy = set(citation.bib['title'] for citation in paper.get_citedby())
-		print('Citations retrieved for Title: %s\n Cited by list is %s' % (self.title, str(self.citedBy)))
+		print('Citations retrieved for Title:', self.title.encode('utf-8'))
+		print('Cited by list is', str(self.citedBy))
 		return self.citedBy
 
 	def genRetrospectiveCitations(self):

@@ -33,11 +33,11 @@ def getCitation(inputFiles, labelOutputFile, listStartIndex):
     with concurrent.futures.ThreadPoolExecutor(max_workers = constants.MAX_WORKERS) as executor:
         future_to_article = {executor.submit(currList[i].genCitedBy): currList[i].title for i in range(len(currList))}
         for future in concurrent.futures.as_completed(future_to_article):
-            articleTitle = future_to_article[future]
+            articleTitle = future_to_article[future].encode('utf-8')
             try:
                 data = future.result()
             except Exception as exc:
-                print('%r generated an exception: %s' % (articleTitle, exc))
+                print(articleTitle, 'generated an exception:', exc)
             else:
                 print('Graph retrieved for %s' % articleTitle)
                 if data is None:
