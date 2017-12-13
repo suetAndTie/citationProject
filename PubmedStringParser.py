@@ -181,7 +181,7 @@ def getAllData(fileNameList):
     for fileName in fileNameList:
         publications += getFileData(fileName)
 
-    print 'Total Number Papers: ', len(publications)
+    print('Total Number Papers: ', len(publications))
     abstracts = []
     for i in xrange(len(publications)):
         stemmedAbstract = stemAbstract(publications[i].abstract)
@@ -189,7 +189,7 @@ def getAllData(fileNameList):
         # Test for performance of stemming
         abstracts.append(stemmedAbstract)
         # abstracts.append(publications[i].abstract)
-    print 'Vectorizing Papers'
+    print('Vectorizing Papers')
     tfIdfVectorizer = TfidfVectorizer()
     tfIdfMatrix = tfIdfVectorizer.fit_transform(abstracts)
     countVectorizer = CountVectorizer()
@@ -199,7 +199,7 @@ def getAllData(fileNameList):
         publications[i].abstractTfidfVector = {col: value for col, value in zip(tfCol, tfValue)}
         ctRow, ctCol, ctValue = find(countMatrix[i])
         publications[i].abstractCountVector = {col: value for col, value in zip(ctCol, ctValue)}
-    print 'Vectorized Papers'
+    print('Vectorized Papers')
 
 
     return publications

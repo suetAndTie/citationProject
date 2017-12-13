@@ -58,33 +58,33 @@ def runModel(modelName, trainData, devData, testData):
 	devControlOutput = controlModel.predict(devData[1])
 	testOutput = model.predict(testData[0])
 	testControlOutput = controlModel.predict(testData[1])
-	print '-----Training Set-----'
-	print '---TF-IDF---'
+	print('-----Training Set-----')
+	print('---TF-IDF---')
 	getMetrics(trainOutput, trainData[2])
-	print '---Control---'
+	print('---Control---')
 	getMetrics(trainControlOutput, trainData[2])
-	print '-----Dev Set-----'
-	print '---TF-IDF---'
+	print('-----Dev Set-----')
+	print('---TF-IDF---')
 	getMetrics(devOutput, devData[2])
-	print '---Control---'
+	print('---Control---')
 	getMetrics(devControlOutput, devData[2])
-	print '-----Test Set-----'
-	print '---TF-IDF---'
+	print('-----Test Set-----')
+	print('---TF-IDF---')
 	getMetrics(testOutput, testData[2])
-	print '---Control---'
+	print('---Control---')
 	getMetrics(testControlOutput, testData[2])
-	print '\n\n'
+	print('\n\n')
 
 
 # Computes classification metrics of the output based on labels
 def getMetrics(output, labels):
-	print 'Num Output Co-Citations: ', np.count_nonzero(output)
-	print 'Num Co-citations: ', np.count_nonzero(labels)
-	print 'Accuracy Score: %f' %metrics.accuracy_score(labels, output)
-	print 'Precision: %f' %metrics.precision_score(labels, output)
-	print 'Recall: %f' %metrics.recall_score(labels, output)
-	print 'F1: %f' %metrics.f1_score(labels, output)
-	print 'Log Loss: %f' %metrics.log_loss(labels, output)
+	print('Num Output Co-Citations: ', np.count_nonzero(output))
+	print('Num Co-citations: ', np.count_nonzero(labels))
+	print('Accuracy Score: %f' %metrics.accuracy_score(labels, output))
+	print('Precision: %f' %metrics.precision_score(labels, output))
+	print('Recall: %f' %metrics.recall_score(labels, output))
+	print('F1: %f' %metrics.f1_score(labels, output))
+	print('Log Loss: %f' %metrics.log_loss(labels, output))
 
 
 def main():
@@ -92,16 +92,16 @@ def main():
 	matrix, controlMatrix, labels = generateDataAndLabels(constants.DATA_FILES, topic+'Matrix.pickle', topic+'CountMatrix.pickle', topic+'Labels.pickle')
 	print(matrix, controlMatrix, labels)
 	trainData, devData, testData = getDataSets(matrix, controlMatrix, labels)
-	print '-----Data Info-----'
-	print 'Train Matrix: ', trainData[0].shape
-	print 'Train Num Co-Citations: ', np.count_nonzero(trainData[2])
-	print 'Dev Matrix: ', devData[0].shape
-	print 'Dev Num Co-Citations: ', np.count_nonzero(devData[2])
-	print 'Test Data Matrix: ', testData[0].shape
-	print 'Test Num Co-Citations: ', np.count_nonzero(testData[2])
-	print '\n\n'
+	print('-----Data Info-----')
+	print('Train Matrix: ', trainData[0].shape)
+	print('Train Num Co-Citations: ', np.count_nonzero(trainData[2]))
+	print('Dev Matrix: ', devData[0].shape)
+	print('Dev Num Co-Citations: ', np.count_nonzero(devData[2]))
+	print('Test Data Matrix: ', testData[0].shape)
+	print('Test Num Co-Citations: ', np.count_nonzero(testData[2]))
+	print('\n\n')
 	for modelName in MODELS:
-		print '----------' + modelName + '----------'
+		print('----------' + modelName + '----------')
 		runModel(modelName, trainData, devData, testData)
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ def getCitation(inputFiles, labelOutputFile, listStartIndex):
 
     startIndex = constants.NUM_PAPERS_CITATION * listStartIndex
     if startIndex >= len(publicationList):
-        print ('List index is %s' %str(listStartIndex))
+        print('List index is %s' %str(listStartIndex))
         raise Exception('Start index %s is too large for publication list of %s and %s number of citations' %(str(startIndex), \
                                                                         str(len(publicationList)), str(constants.NUM_PAPERS_CITATION)))
 
@@ -92,11 +92,11 @@ def replacePublications(labelOutputFile):
             gotPM = True
         if gotScholar and gotPM: numBoth += 1
         if gotScholar or gotPM: numEither += 1
-    print 'Total Entries: ', len(finalPubList)
-    print 'Number of Scholar Entries: ', numScholar
-    print 'Number of PM Entries: ', numPM
-    print 'Number of Both: ', numBoth
-    print 'Number of either: ', numEither
+    print('Total Entries: ', len(finalPubList))
+    print('Number of Scholar Entries: ', numScholar)
+    print('Number of PM Entries: ', numPM)
+    print('Number of Both: ', numBoth)
+    print('Number of either: ', numEither)
 
 
 def main():
