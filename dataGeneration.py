@@ -19,13 +19,14 @@ def generateDataAndLabels(inputFiles, matrixOutputFile, controlMatrixOutputFile,
 		with open(labelOutputFile, 'rb') as f:
 			labels = pickle.load(f)
 			return pubRelations, controlPubRelations, labels
-	publicationList = PubmedStringParser.getAllData(inputFiles)
 	if os.path.isfile('temp' + labelOutputFile):
 		with open('temp' + labelOutputFile, 'rb') as f:
 			publicationList = pickle.load(f)
 	else:
+		publicationList = PubmedStringParser.getAllData(inputFiles)
 		for i in xrange(len(publicationList)):
 			publicationList[i].genRetrospectiveCitations()
+			publicationList[i].getCitedByPMCitations()
 		with concurrent.futures.ThreadPoolExecutor(max_workers = constants.MAX_WORKERS) as executor:
 			future_to_article = {executor.submit(publicationList[i].genCitedBy): publicationList[i].title for i in xrange(len(publicationList))}
 			for future in concurrent.futures.as_completed(future_to_article):
@@ -49,13 +50,19 @@ def generateDataAndLabels(inputFiles, matrixOutputFile, controlMatrixOutputFile,
 	controlPubRelations = []
 	labels = []
 	for i in xrange(len(publicationList)):
+		if len(publicationList[i].abstract) == 0: continue
+		# if len(publicationList[i].citedBy) == 0: continue
 		for j in xrange(i + 1, len(publicationList)):
+			if len(publicationList[j].abstract) == 0: continue
+			# if len(publicationList[j].citedBy) == 0: continue
 			if dateRange == None or util.dateDifference(publicationList[i].date, publicationList[j].date) <= dateRange:
 				publicationRelationships.append(util.extractFeatures(publicationList[i], publicationList[j], 'tfidf'))
 				controlPubRelations.append(util.extractFeatures(publicationList[i], publicationList[j], 'count'))
 				citedByI = publicationList[i].citedBy
 				citedByJ = publicationList[j].citedBy
-				if len(citedByI & citedByJ) == 0:
+				pmCitedByI = publicationList[i].PMCitedBy
+				pmCitedByJ = publicationList[j].PMCitedBy
+				if len(citedByI & citedByJ) == 0 and len(pmCitedByI & pmCitedByJ) == 0:
 					labels.append(0)
 				else:
 					labels.append(1)

@@ -4,16 +4,19 @@ import scholarly
 import constants
 
 class Publication:
-	def __init__(self, title, abstract, date, authors, pmid):
+	def __init__(self, title, oldTitle, abstract, date, authors, pmid):
 		self.title = title
+		self.oldTitle = title	#title without spaces in it after \n
 		self.abstract = abstract
 		self.date = date
 		self.authors = authors
 		self.pmid = pmid
 		self.citedBy = set()
+		self.PMCitedBy = set()
 		self.retrospectiveCitations = []
 		self.attemptedRetrieveRetrospectiveCitations = False
 		self.attemptedRetrieveCitedBy = False
+		self.attemptedPMCitedBy = False
 		self.abstractTfidfVector = None
 		self.abstractCountVector = None
 
@@ -26,7 +29,7 @@ class Publication:
 			return
 		print('Attempting to retrieve citations for Title: %s' % self.title)
 		self.attemptedRetrieveCitedBy = True
-		query = scholarly.search_pubs_query(self.title)
+		query = scholarly.search_pubs_query(self.title.encode('utf-8'))
 		paper = next(query, None)
 		if paper is None:
 			return
@@ -63,6 +66,23 @@ class Publication:
 		except Exception as e:
 			print(e)
 
+
+	def getCitedByPMCitations(self):
+		# Put in PMID and get back PMID of artciles that cite the given article
+		if self.attemptedRetrieveRetrospectiveCitations: return
+		self.attemptedRetrieveRetrospectiveCitations = True
+		try:
+		    pmreq = requests.get(constants.PM_CITEDBY_URL_PRE + str(self.pmid) + constants.PM_CITEDBY_URL_POST)
+		    if pmreq.status_code != 200:
+		        return
+		    pmtree = ET.fromstring(pmreq.text)
+		    for child in pmtree[0][2]:
+		        if child.tag == 'Link':
+		            self.PMCitedBy.add(child[0].text)
+		except Exception as e:
+			print(e)
+
+
 	def pubPrint(self):
 		print('Title: %s' % self.title)
 		print('Date: %s' % self.date)
@@ -70,6 +90,7 @@ class Publication:
 		print('PMID: %s' % self.pmid)
 		print('Cited by: %s' % str(self.citedBy))
 		print('Retrospective Citations: %s' % str(self.retrospectiveCitations))
+		print('PM Cited by: %s' % (str(self.PMCitedBy)))
 		print('Abstract: %s' % self.abstract)
 		print('Stemmed Abstract: %s' % self.stemmedAbstract)
 		print('TfIdf Abstract: %s' % self.abstractTfidfVector)

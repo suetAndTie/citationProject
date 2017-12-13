@@ -30,6 +30,7 @@ def getDataFromEntry(f, line):
         return line
 
     title = ''
+    oldTitle = ''
     abstract = u''
     date = ''
     authors = u''
@@ -44,6 +45,7 @@ def getDataFromEntry(f, line):
 
     # Get title
     while line != '\n':
+        oldTitle = oldTitle + line[:-1]
         title = title + line[:-1] + ' '
         line = f.readline()
     line = f.readline()
@@ -110,7 +112,7 @@ def getDataFromEntry(f, line):
     else:
         parsedDate = parsedDateVector[0][0]
 
-    return Publication(title, abstract, parsedDate, cleanedAuthors, pmid)
+    return Publication(title, oldTitle, abstract, parsedDate, cleanedAuthors, pmid)
 
 
 # Function to read in the data from the file
