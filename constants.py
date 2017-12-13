@@ -37,7 +37,7 @@ We are aiming to get NUM_PAPER_CITATIONS papers per run
 '''
 
 # make this true if you want to get the citations for START_INDEX
-GET_CITATIONS = False
+GET_CITATIONS = True
 
 # make this true if you are done getting the citations and want to merge them all
 # into a final publication list

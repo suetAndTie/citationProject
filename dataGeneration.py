@@ -24,11 +24,11 @@ def generateDataAndLabels(inputFiles, matrixOutputFile, controlMatrixOutputFile,
 			publicationList = pickle.load(f)
 	else:
 		publicationList = PubmedStringParser.getAllData(inputFiles)
-		for i in xrange(len(publicationList)):
+		for i in range(len(publicationList)):
 			publicationList[i].genRetrospectiveCitations()
 			publicationList[i].getCitedByPMCitations()
 		with concurrent.futures.ThreadPoolExecutor(max_workers = constants.MAX_WORKERS) as executor:
-			future_to_article = {executor.submit(publicationList[i].genCitedBy): publicationList[i].title for i in xrange(len(publicationList))}
+			future_to_article = {executor.submit(publicationList[i].genCitedBy): publicationList[i].title for i in range(len(publicationList))}
 			for future in concurrent.futures.as_completed(future_to_article):
 				articleTitle = future_to_article[future]
 				try:
@@ -49,10 +49,10 @@ def generateDataAndLabels(inputFiles, matrixOutputFile, controlMatrixOutputFile,
 	publicationRelationships = []
 	controlPubRelations = []
 	labels = []
-	for i in xrange(len(publicationList)):
+	for i in range(len(publicationList)):
 		if len(publicationList[i].abstract) == 0: continue
 		# if len(publicationList[i].citedBy) == 0: continue
-		for j in xrange(i + 1, len(publicationList)):
+		for j in range(i + 1, len(publicationList)):
 			if len(publicationList[j].abstract) == 0: continue
 			# if len(publicationList[j].citedBy) == 0: continue
 			if dateRange == None or util.dateDifference(publicationList[i].date, publicationList[j].date) <= dateRange:

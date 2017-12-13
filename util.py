@@ -69,8 +69,8 @@ def dateDifference(x, y):
 # < 3 months, < 6 months, < 9 months, < 12 months, < 18 months, < 24 months, < 36 months, < 48 months, < 60 months, < 84 months, < 120
 def generateDateVector(dateDiff):
 	lessThanDateVector = [3, 6, 9, 12, 18, 24, 36, 48, 60, 84, 120]
-	returnVector = [0 for i in xrange(len(lessThanDateVector))]
-	for i in xrange(len(returnVector)):
+	returnVector = [0 for i in range(len(lessThanDateVector))]
+	for i in range(len(returnVector)):
 		if dateDiff < lessThanDateVector[i]:
 			returnVector[i] = 1
 	return returnVector

@@ -27,11 +27,11 @@ def getCitation(inputFiles, labelOutputFile, listStartIndex):
     else:
         listEndIndex = listStartIndex + constants.NUM_PAPERS_CITATION
     currList = publicationList[listStartIndex:listEndIndex]
-    for i in xrange(len(currList)):
+    for i in range(len(currList)):
         currList[i].genRetrospectiveCitations()
         currList[i].getCitedByPMCitations()
     with concurrent.futures.ThreadPoolExecutor(max_workers = constants.MAX_WORKERS) as executor:
-        future_to_article = {executor.submit(currList[i].genCitedBy): currList[i].title for i in xrange(len(currList))}
+        future_to_article = {executor.submit(currList[i].genCitedBy): currList[i].title for i in range(len(currList))}
         for future in concurrent.futures.as_completed(future_to_article):
             articleTitle = future_to_article[future]
             try:
@@ -44,8 +44,8 @@ def getCitation(inputFiles, labelOutputFile, listStartIndex):
                     print('But the data is none')
                 else:
                     print(data)
-	with open(str(listStartIndex) + 'temp' + labelOutputFile, 'wb') as f:
-		pickle.dump(currList, f)
+    with open(str(listStartIndex) + 'temp' + labelOutputFile, 'wb') as f:
+        pickle.dump(currList, f)
 
     print('Total pub list length is %s' %str(len(publicationList)))
     print('Curr pub list length is %s' %str(len(currList)))
@@ -71,7 +71,7 @@ def replacePublications(labelOutputFile):
     finalPubList = []
     for startIndex in range(maxIndex + 1):
         with open(str(startIndex) + 'temp' + labelOutputFile, 'rb') as f:
-    		currPubList = pickle.load(f)
+            currPubList = pickle.load(f)
         endIndex = startIndex + len(currPubList)
         finalPubList[startIndex:endIndex] = currPubList
     with open('temp' + labelOutputFile, 'wb') as f:
@@ -81,7 +81,7 @@ def replacePublications(labelOutputFile):
     numPM = 0
     numBoth = 0
     numEither = 0
-    for i in xrange(len(finalPubList)):
+    for i in range(len(finalPubList)):
         gotScholar = False
         gotPM = False
         if finalPubList[i].citedBy is not None and len(finalPubList[i].citedBy) > 0:

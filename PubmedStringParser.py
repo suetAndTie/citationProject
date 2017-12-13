@@ -165,7 +165,7 @@ def getFileData(fileName):
 def stemAbstract(abstract):
     vectorAbstract = abstract.split()
     returnString = ''
-    for i in xrange(len(vectorAbstract)):
+    for i in range(len(vectorAbstract)):
         returnString += stem(vectorAbstract[i]) + ' '
     return returnString
 
@@ -183,7 +183,7 @@ def getAllData(fileNameList):
 
     print('Total Number Papers: ', len(publications))
     abstracts = []
-    for i in xrange(len(publications)):
+    for i in range(len(publications)):
         stemmedAbstract = stemAbstract(publications[i].abstract)
         publications[i].stemmedAbstract = stemmedAbstract
         # Test for performance of stemming
@@ -194,7 +194,7 @@ def getAllData(fileNameList):
     tfIdfMatrix = tfIdfVectorizer.fit_transform(abstracts)
     countVectorizer = CountVectorizer()
     countMatrix = countVectorizer.fit_transform(abstracts)
-    for i in xrange(len(publications)):
+    for i in range(len(publications)):
         tfRow, tfCol, tfValue = find(tfIdfMatrix[i])
         publications[i].abstractTfidfVector = {col: value for col, value in zip(tfCol, tfValue)}
         ctRow, ctCol, ctValue = find(countMatrix[i])
